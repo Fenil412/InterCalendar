@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import DayCell from './DayCell';
 import RangeSelector from './RangeSelector';
+import SpotlightCard from './reactbits/SpotlightCard';
 import { MONTH_NAMES, DAY_LABELS } from '../utils/dateUtils';
 
 /**
@@ -11,7 +12,8 @@ import { MONTH_NAMES, DAY_LABELS } from '../utils/dateUtils';
  *  - Day-of-week labels
  *  - Grid of DayCell components
  *  - RangeSelector status bar
- *  - Smooth page-flip animation on month change
+ *  - 3D page-flip animation on month change
+ *  - SpotlightCard wrapper from React Bits
  */
 export default function Calendar({
   year,
@@ -27,12 +29,9 @@ export default function Calendar({
   onClearRange,
 }) {
   return (
-    <div
-      className="rounded-2xl overflow-hidden shadow-lg"
-      style={{
-        backgroundColor: 'var(--bg-secondary)',
-        border: '1px solid var(--border-color)',
-      }}
+    <SpotlightCard
+      className="shadow-lg"
+      spotlightColor="rgba(232, 122, 27, 0.12)"
     >
       {/* ─── Month Navigation Header ─── */}
       <div
@@ -40,8 +39,8 @@ export default function Calendar({
         style={{ borderBottom: '1px solid var(--border-color)' }}
       >
         <motion.button
-          whileHover={{ scale: 1.15, x: -2 }}
-          whileTap={{ scale: 0.9 }}
+          whileHover={{ scale: 1.2, x: -3, rotateY: -15 }}
+          whileTap={{ scale: 0.85 }}
           onClick={onPrev}
           className="p-2 rounded-xl transition-colors cursor-pointer"
           style={{
@@ -68,11 +67,12 @@ export default function Calendar({
         <AnimatePresence mode="wait">
           <motion.div
             key={`${year}-${month}`}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.25 }}
+            initial={{ opacity: 0, y: 15, rotateX: -30 }}
+            animate={{ opacity: 1, y: 0, rotateX: 0 }}
+            exit={{ opacity: 0, y: -15, rotateX: 30 }}
+            transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
             className="text-center"
+            style={{ perspective: '600px' }}
           >
             <h2
               className="text-xl sm:text-2xl font-bold"
@@ -93,8 +93,8 @@ export default function Calendar({
         </AnimatePresence>
 
         <motion.button
-          whileHover={{ scale: 1.15, x: 2 }}
-          whileTap={{ scale: 0.9 }}
+          whileHover={{ scale: 1.2, x: 3, rotateY: 15 }}
+          whileTap={{ scale: 0.85 }}
           onClick={onNext}
           className="p-2 rounded-xl transition-colors cursor-pointer"
           style={{
@@ -131,8 +131,11 @@ export default function Calendar({
         {/* Day-of-week headers */}
         <div className="grid grid-cols-7 mb-2">
           {DAY_LABELS.map((label, i) => (
-            <div
+            <motion.div
               key={label}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.05, duration: 0.3 }}
               className="text-center text-xs font-semibold uppercase tracking-wider py-2"
               style={{
                 color:
@@ -142,19 +145,19 @@ export default function Calendar({
               }}
             >
               {label}
-            </div>
+            </motion.div>
           ))}
         </div>
 
-        {/* Calendar grid with flip animation */}
+        {/* Calendar grid with 3D flip animation */}
         <AnimatePresence mode="wait">
           <motion.div
             key={`${year}-${month}`}
-            initial={{ opacity: 0, rotateX: -15 }}
-            animate={{ opacity: 1, rotateX: 0 }}
-            exit={{ opacity: 0, rotateX: 15 }}
-            transition={{ duration: 0.35, ease: 'easeInOut' }}
-            style={{ perspective: '800px' }}
+            initial={{ opacity: 0, rotateX: -20, scale: 0.95 }}
+            animate={{ opacity: 1, rotateX: 0, scale: 1 }}
+            exit={{ opacity: 0, rotateX: 20, scale: 0.95 }}
+            transition={{ duration: 0.45, ease: [0.23, 1, 0.32, 1] }}
+            style={{ perspective: '1000px', transformStyle: 'preserve-3d' }}
           >
             {grid.map((row, rowIdx) => (
               <div key={rowIdx} className="grid grid-cols-7 gap-1">
@@ -178,17 +181,22 @@ export default function Calendar({
         </AnimatePresence>
 
         {/* Legend */}
-        <div
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
           className="flex flex-wrap items-center justify-center gap-4 mt-4 pt-3"
           style={{ borderTop: '1px solid var(--border-color)' }}
         >
           <LegendItem color="#e87a1b" label="Today" />
           <LegendItem color="#10b981" label="Selected" />
           <LegendItem color="#ef4444" label="Holiday" dot />
+          <LegendItem color="#3b82f6" label="US Holiday" dot />
+          <LegendItem color="#f97316" label="Indian" dot />
           <LegendItem color="#e87a1b" label="Weekend" text />
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </SpotlightCard>
   );
 }
 

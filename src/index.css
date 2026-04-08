@@ -78,6 +78,8 @@
   --calendar-today-text: #ffffff;
   --note-bg: #fff9f0;
   --note-border: #f3e8d8;
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.3);
 }
 
 .dark {
@@ -93,6 +95,8 @@
   --calendar-today-text: #ffffff;
   --note-bg: #1c1917;
   --note-border: #292524;
+  --glass-bg: rgba(28, 25, 23, 0.6);
+  --glass-border: rgba(68, 64, 60, 0.3);
 }
 
 /* ============================================
@@ -107,9 +111,10 @@ body {
   font-family: var(--font-sans);
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.5s ease, color 0.5s ease;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 /* Smooth scrolling */
@@ -136,6 +141,86 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
+}
+
+/* ============================================
+   3D CSS Perspective & Transforms
+   ============================================ */
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.perspective-800 {
+  perspective: 800px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+/* 3D Card flip animation */
+@keyframes flipIn {
+  0% {
+    opacity: 0;
+    transform: perspective(800px) rotateY(-30deg) translateZ(-50px);
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(800px) rotateY(0deg) translateZ(0);
+  }
+}
+
+@keyframes flipInFromRight {
+  0% {
+    opacity: 0;
+    transform: perspective(800px) rotateY(30deg) translateZ(-50px);
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(800px) rotateY(0deg) translateZ(0);
+  }
+}
+
+.animate-flip-in {
+  animation: flipIn 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+.animate-flip-in-right {
+  animation: flipInFromRight 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+/* 3D hover effect for cards */
+.card-3d {
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.4s ease;
+  transform-style: preserve-3d;
+}
+
+.card-3d:hover {
+  transform: perspective(800px) rotateX(-2deg) rotateY(3deg) translateZ(10px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 30px rgba(232, 122, 27, 0.08);
+}
+
+/* ============================================
+   Glassmorphism
+   ============================================ */
+
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+}
+
+.glass-strong {
+  background: var(--glass-bg);
+  backdrop-filter: blur(30px) saturate(1.5);
+  -webkit-backdrop-filter: blur(30px) saturate(1.5);
+  border: 1px solid var(--glass-border);
 }
 
 /* ============================================
@@ -173,6 +258,55 @@ html {
   }
 }
 
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes breathe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes rotateGlow {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}
+
 .animate-fade-in-up {
   animation: fadeInUp 0.4s ease-out forwards;
 }
@@ -185,13 +319,32 @@ html {
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent 25%, rgba(255,255,255,0.15) 50%, transparent 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+.animate-breathe {
+  animation: breathe 3s ease-in-out infinite;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
 /* ============================================
    Calendar Day Cell Hover Effect
    ============================================ */
 
 .day-cell {
   position: relative;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  transform-style: preserve-3d;
 }
 
 .day-cell::before {
@@ -200,16 +353,21 @@ html {
   inset: 2px;
   border-radius: 10px;
   background: transparent;
-  transition: background 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
   z-index: 0;
 }
 
+.day-cell:hover {
+  transform: translateY(-2px) scale(1.05);
+}
+
 .day-cell:hover::before {
-  background: rgb(232 122 27 / 0.06);
+  background: rgb(232 122 27 / 0.08);
+  box-shadow: 0 4px 12px rgba(232, 122, 27, 0.1);
 }
 
 .dark .day-cell:hover::before {
-  background: rgb(232 122 27 / 0.12);
+  background: rgb(232 122 27 / 0.15);
 }
 
 /* ============================================
@@ -227,8 +385,8 @@ html {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 40%;
-  background: linear-gradient(to top, var(--bg-secondary), transparent);
+  height: 50%;
+  background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
   pointer-events: none;
 }
 
@@ -237,13 +395,14 @@ html {
    ============================================ */
 
 .note-card {
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
   border-left: 3px solid transparent;
 }
 
 .note-card:hover {
   border-left-color: var(--calendar-today-bg);
-  transform: translateX(2px);
+  transform: translateX(4px) translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 /* ============================================
@@ -258,4 +417,320 @@ html {
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+}
+
+/* ============================================
+   React Bits — SpotlightCard
+   ============================================ */
+
+.card-spotlight {
+  position: relative;
+  border-radius: 1.5rem;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
+  overflow: hidden;
+  --mouse-x: 50%;
+  --mouse-y: 50%;
+  --spotlight-color: rgba(232, 122, 27, 0.15);
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.card-spotlight::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), var(--spotlight-color), transparent 80%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.card-spotlight:hover::before,
+.card-spotlight:focus-within::before {
+  opacity: 0.8;
+}
+
+/* ============================================
+   React Bits — TiltedCard
+   ============================================ */
+
+.tilted-card-figure {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  perspective: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.tilted-card-inner {
+  position: relative;
+  transform-style: preserve-3d;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.tilted-card-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+  border-radius: 1rem;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.tilted-card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  will-change: transform;
+  transform: translateZ(30px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.5rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 40%, transparent 60%);
+  border-radius: 1rem;
+}
+
+.tilted-card-caption {
+  pointer-events: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 6px 14px;
+  font-size: 11px;
+  color: #2d2d2d;
+  opacity: 0;
+  z-index: 3;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Hide the custom cursor/tooltip on mobile & touch devices */
+@media (max-width: 768px) {
+  .tilted-card-caption {
+    display: none !important;
+  }
+}
+
+@media (hover: none) {
+  .tilted-card-caption {
+    display: none !important;
+  }
+}
+
+/* ============================================
+   React Bits — GradientText
+   ============================================ */
+
+.animated-gradient-text {
+  position: relative;
+  margin: 0 auto;
+  display: flex;
+  max-width: fit-content;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1.25rem;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+  transition: box-shadow 0.5s ease-out;
+  overflow: hidden;
+  cursor: default;
+}
+
+.animated-gradient-text.with-border {
+  padding: 0.35rem 0.75rem;
+}
+
+.gradient-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.gradient-overlay::before {
+  content: '';
+  position: absolute;
+  border-radius: inherit;
+  width: calc(100% - 2px);
+  height: calc(100% - 2px);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--bg-secondary);
+  z-index: -1;
+}
+
+.text-content {
+  display: inline-block;
+  position: relative;
+  z-index: 2;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* ============================================
+   React Bits — RotatingText
+   ============================================ */
+
+.text-rotate {
+  display: flex;
+  flex-wrap: wrap;
+  white-space: pre-wrap;
+  position: relative;
+}
+
+.text-rotate-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.text-rotate-word {
+  display: inline-flex;
+}
+
+.text-rotate-lines {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.text-rotate-element {
+  display: inline-block;
+}
+
+.text-rotate-space {
+  white-space: pre;
+}
+
+/* ============================================
+   Holiday Tooltip
+   ============================================ */
+
+.holiday-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 10px 14px;
+  min-width: 200px;
+  max-width: 280px;
+  z-index: 50;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  pointer-events: none;
+}
+
+.holiday-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--border-color);
+}
+
+/* ============================================
+   Month transition background flash
+   ============================================ */
+
+@keyframes monthFlash {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.15;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.month-flash {
+  animation: monthFlash 0.6s ease-out;
+}
+
+/* ============================================
+   Floating particles background
+   ============================================ */
+
+@keyframes particleFloat {
+  0%, 100% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(50px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* ============================================
+   Holiday type badges
+   ============================================ */
+
+.badge-us {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+}
+
+.badge-indian {
+  background: linear-gradient(135deg, #f97316, #ea580c);
+  color: white;
+}
+
+.badge-international {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+}
+
+/* ============================================
+   Smooth page transitions
+   ============================================ */
+
+.page-transition-enter {
+  opacity: 0;
+  transform: perspective(600px) rotateX(-5deg) translateY(20px);
+}
+
+.page-transition-enter-active {
+  opacity: 1;
+  transform: perspective(600px) rotateX(0deg) translateY(0);
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 }

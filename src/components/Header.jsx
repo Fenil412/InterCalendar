@@ -1,17 +1,20 @@
 import { motion } from 'framer-motion';
+import GradientText from './reactbits/GradientText';
+import RotatingText from './reactbits/RotatingText';
 
 /**
  * Header — Top bar with:
- *  - App title & branding
+ *  - App title with GradientText animation (React Bits)
+ *  - RotatingText subtitle (React Bits)
  *  - Dark mode toggle with smooth icon transition
  *  - "Today" quick-jump button
  */
 export default function Header({ darkMode, toggleDarkMode, onGoToToday }) {
   return (
     <motion.header
-      initial={{ y: -20, opacity: 0 }}
+      initial={{ y: -30, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5, ease: 'easeOut' }}
+      transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
       className="sticky top-0 z-50 backdrop-blur-xl border-b"
       style={{
         backgroundColor: darkMode
@@ -24,11 +27,18 @@ export default function Header({ darkMode, toggleDarkMode, onGoToToday }) {
         <div className="flex items-center justify-between h-16 sm:h-18">
           {/* Brand */}
           <div className="flex items-center gap-3">
-            {/* Calendar icon */}
-            <div
+            {/* Calendar icon with 3D hover */}
+            <motion.div
+              whileHover={{
+                scale: 1.1,
+                rotateY: 15,
+                rotateX: -5,
+              }}
+              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
               className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shadow-md"
               style={{
                 background: 'linear-gradient(135deg, #e87a1b, #d96011)',
+                transformStyle: 'preserve-3d',
               }}
             >
               <svg
@@ -44,24 +54,35 @@ export default function Header({ darkMode, toggleDarkMode, onGoToToday }) {
                   d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                 />
               </svg>
-            </div>
+            </motion.div>
 
             <div>
-              <h1
+              <GradientText
+                colors={['#e87a1b', '#ef4444', '#f59e0b', '#e87a1b']}
+                animationSpeed={6}
                 className="text-lg sm:text-xl font-bold tracking-tight"
-                style={{
-                  fontFamily: 'var(--font-display)',
-                  color: 'var(--text-primary)',
-                }}
+                style={{ fontFamily: 'var(--font-display)' }}
               >
                 InterCalendar
-              </h1>
-              <p
-                className="text-xs hidden sm:block -mt-0.5"
-                style={{ color: 'var(--text-muted)' }}
-              >
-                Interactive Wall Calendar
-              </p>
+              </GradientText>
+              <div className="hidden sm:flex items-center gap-1 -mt-0.5">
+                <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                  Your
+                </span>
+                <RotatingText
+                  texts={['Interactive', 'Beautiful', 'Modern', 'Smart']}
+                  mainClassName="text-xs font-semibold overflow-hidden"
+                  staggerFrom="first"
+                  staggerDuration={0.025}
+                  rotationInterval={2500}
+                  transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                  elementLevelClassName="inline-block"
+                  style={{ color: '#e87a1b' }}
+                />
+                <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                  Wall Calendar
+                </span>
+              </div>
             </div>
           </div>
 
@@ -69,7 +90,10 @@ export default function Header({ darkMode, toggleDarkMode, onGoToToday }) {
           <div className="flex items-center gap-2 sm:gap-3">
             {/* Today button */}
             <motion.button
-              whileHover={{ scale: 1.05 }}
+              whileHover={{
+                scale: 1.05,
+                boxShadow: '0 4px 15px rgba(232, 122, 27, 0.3)',
+              }}
               whileTap={{ scale: 0.95 }}
               onClick={onGoToToday}
               className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all cursor-pointer"
@@ -87,8 +111,8 @@ export default function Header({ darkMode, toggleDarkMode, onGoToToday }) {
 
             {/* Dark mode toggle */}
             <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9, rotate: 180 }}
+              whileHover={{ scale: 1.1, rotate: 15 }}
+              whileTap={{ scale: 0.85, rotate: 180 }}
               onClick={toggleDarkMode}
               className="p-2 sm:p-2.5 rounded-xl transition-all cursor-pointer"
               style={{
