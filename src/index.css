@@ -1,0 +1,261 @@
+@import "tailwindcss";
+
+/* ============================================
+   InterCalendar — Custom Theme Configuration
+   ============================================ */
+
+@theme {
+  /* Primary Palette — Warm, earthy tones for a wall calendar feel */
+  --color-primary-50: #fef7ed;
+  --color-primary-100: #fcecd5;
+  --color-primary-200: #f8d5aa;
+  --color-primary-300: #f3b874;
+  --color-primary-400: #ed933c;
+  --color-primary-500: #e87a1b;
+  --color-primary-600: #d96011;
+  --color-primary-700: #b44810;
+  --color-primary-800: #8f3915;
+  --color-primary-900: #753114;
+  --color-primary-950: #3f1607;
+
+  /* Accent — Cool blue for contrast */
+  --color-accent-50: #eff6ff;
+  --color-accent-100: #dbeafe;
+  --color-accent-200: #bfdbfe;
+  --color-accent-300: #93c5fd;
+  --color-accent-400: #60a5fa;
+  --color-accent-500: #3b82f6;
+  --color-accent-600: #2563eb;
+  --color-accent-700: #1d4ed8;
+  --color-accent-800: #1e40af;
+  --color-accent-900: #1e3a8a;
+  --color-accent-950: #172554;
+
+  /* Surface colors for dark mode */
+  --color-surface-50: #f8fafc;
+  --color-surface-100: #f1f5f9;
+  --color-surface-200: #e2e8f0;
+  --color-surface-300: #cbd5e1;
+  --color-surface-400: #94a3b8;
+  --color-surface-500: #64748b;
+  --color-surface-600: #475569;
+  --color-surface-700: #334155;
+  --color-surface-800: #1e293b;
+  --color-surface-900: #0f172a;
+  --color-surface-950: #020617;
+
+  /* Range selection colors */
+  --color-range-start: #10b981;
+  --color-range-mid: #d1fae5;
+  --color-range-end: #059669;
+
+  /* Font families */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Custom shadows */
+  --shadow-calendar: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  --shadow-card: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.04);
+  --shadow-elevated: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-glow: 0 0 20px rgb(232 122 27 / 0.15);
+}
+
+/* ============================================
+   Base Styles & Dark Mode Variables
+   ============================================ */
+
+:root {
+  --bg-primary: #fefbf6;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f8f4ef;
+  --text-primary: #1a1207;
+  --text-secondary: #5c4a2f;
+  --text-muted: #8b7355;
+  --border-color: #e6ddd0;
+  --border-hover: #d4c5b0;
+  --calendar-today-bg: #e87a1b;
+  --calendar-today-text: #ffffff;
+  --note-bg: #fff9f0;
+  --note-border: #f3e8d8;
+}
+
+.dark {
+  --bg-primary: #0c0a09;
+  --bg-secondary: #1c1917;
+  --bg-tertiary: #292524;
+  --text-primary: #fef3c7;
+  --text-secondary: #d6d3d1;
+  --text-muted: #a8a29e;
+  --border-color: #44403c;
+  --border-hover: #57534e;
+  --calendar-today-bg: #ea580c;
+  --calendar-today-text: #ffffff;
+  --note-bg: #1c1917;
+  --note-border: #292524;
+}
+
+/* ============================================
+   Global Styles
+   ============================================ */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ============================================
+   Scrollbar Styling
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* ============================================
+   Calendar Grid Animations
+   ============================================ */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgb(232 122 27 / 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgb(232 122 27 / 0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s ease-out forwards;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* ============================================
+   Calendar Day Cell Hover Effect
+   ============================================ */
+
+.day-cell {
+  position: relative;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.day-cell::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: 10px;
+  background: transparent;
+  transition: background 0.2s ease;
+  z-index: 0;
+}
+
+.day-cell:hover::before {
+  background: rgb(232 122 27 / 0.06);
+}
+
+.dark .day-cell:hover::before {
+  background: rgb(232 122 27 / 0.12);
+}
+
+/* ============================================
+   Hero Image Effects
+   ============================================ */
+
+.hero-image-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-image-container::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(to top, var(--bg-secondary), transparent);
+  pointer-events: none;
+}
+
+/* ============================================
+   Note Card Styles
+   ============================================ */
+
+.note-card {
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+}
+
+.note-card:hover {
+  border-left-color: var(--calendar-today-bg);
+  transform: translateX(2px);
+}
+
+/* ============================================
+   Selection indicator */
+
+.selection-pill {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
