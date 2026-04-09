@@ -6,6 +6,8 @@ import NotesPanel from './components/NotesPanel';
 import TiltedCard from './components/reactbits/TiltedCard';
 import CountUp from './components/reactbits/CountUp';
 import SpotlightCard from './components/reactbits/SpotlightCard';
+import CustomCursor from './components/reactbits/CustomCursor';
+import SplashCursor from './components/reactbits/SplashCursor';
 import { useCalendar } from './hooks/useCalendar';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { MONTH_NAMES, MONTH_IMAGES, MONTH_EMOJI, MONTH_THEMES, getSeason } from './utils/dateUtils';
@@ -22,6 +24,8 @@ import { MONTH_NAMES, MONTH_IMAGES, MONTH_EMOJI, MONTH_THEMES, getSeason } from 
  *  - React Bits TiltedCard for hero image (3D tilt)
  *  - React Bits CountUp for stat numbers
  *  - React Bits SpotlightCard for stat cards
+ *  - React Bits CustomCursor (dual-ring animated cursor)
+ *  - React Bits SplashCursor (WebGL fluid simulation background)
  *  - Per-month unique images (12 different images)
  *  - 3D CSS transforms and smooth animations
  *  - Floating particles background effect
@@ -105,6 +109,18 @@ export default function App() {
       className="min-h-screen transition-colors duration-500"
       style={{ backgroundColor: 'var(--bg-primary)' }}
     >
+      {/* ─── React Bits: WebGL Fluid Cursor Background ─── */}
+      <SplashCursor
+        DENSITY_DISSIPATION={3.5}
+        VELOCITY_DISSIPATION={2}
+        SPLAT_RADIUS={0.2}
+        SPLAT_FORCE={6000}
+        CURL={3}
+        COLOR_UPDATE_SPEED={10}
+      />
+
+      {/* ─── React Bits: Custom Dual-Ring Cursor (desktop only) ─── */}
+      <CustomCursor />
       {/* ─── Floating Ambient Particles ─── */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         {[...Array(6)].map((_, i) => (

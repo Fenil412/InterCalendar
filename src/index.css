@@ -631,33 +631,72 @@ html {
 }
 
 /* ============================================
-   Holiday Tooltip
+   Holiday Tooltip (Portal-based — fixed position)
    ============================================ */
 
-.holiday-tooltip {
-  position: absolute;
-  bottom: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%);
+.holiday-tooltip-portal {
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 10px 14px;
-  min-width: 200px;
-  max-width: 280px;
-  z-index: 50;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  border-radius: 14px;
+  padding: 12px 16px;
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.18),
+    0 2px 8px rgba(0, 0, 0, 0.08);
   pointer-events: none;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
-.holiday-tooltip::after {
+.dark .holiday-tooltip-portal {
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.4),
+    0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Arrow pointing down (tooltip above cell) */
+.holiday-tooltip-arrow[data-placement="top"]::after {
   content: '';
   position: absolute;
-  top: 100%;
+  bottom: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 7px solid transparent;
+  border-top-color: var(--border-color);
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.05));
+}
+
+.holiday-tooltip-arrow[data-placement="top"]::before {
+  content: '';
+  position: absolute;
+  bottom: -5px;
   left: 50%;
   transform: translateX(-50%);
   border: 6px solid transparent;
-  border-top-color: var(--border-color);
+  border-top-color: var(--bg-secondary);
+  z-index: 1;
+}
+
+/* Arrow pointing up (tooltip below cell) */
+.holiday-tooltip-arrow[data-placement="bottom"]::after {
+  content: '';
+  position: absolute;
+  top: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 7px solid transparent;
+  border-bottom-color: var(--border-color);
+  filter: drop-shadow(0 -2px 2px rgba(0, 0, 0, 0.05));
+}
+
+.holiday-tooltip-arrow[data-placement="bottom"]::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-bottom-color: var(--bg-secondary);
+  z-index: 1;
 }
 
 /* ============================================
